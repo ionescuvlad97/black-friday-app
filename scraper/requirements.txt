@@ -1,0 +1,5 @@
+bs4
+sqlalchemy
+sqlalchemy_utils
+pymysql
+matplotlib
