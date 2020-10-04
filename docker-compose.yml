@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  mysql_db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+    volumes:
+      - ./my-datavolume:/var/lib/mysql
+    networks:
+      - app-tier
+
+  python_app:
+    build: ./scraper
+    volumes:
+      - ./scraper:/usr/src/app
+      - ./dbmodels:/usr/src/app/scripts/dbmodels
+    depends_on:
+      - mysql_db
+    networks:
+      - app-tier
+    command:
+      tail -f /dev/null
+
+  bf_api:
+    build: ./api
+    ports:
+      - 5000:5000
+    volumes:
+      - ./api:/usr/src/app
+      - ./dbmodels:/usr/src/app/dbmodels
+    depends_on:
+      - mysql_db
+    networks:
+      - app-tier
+    command:
+      tail -f /dev/null
+
+networks:
+  app-tier:
+    driver: bridge
