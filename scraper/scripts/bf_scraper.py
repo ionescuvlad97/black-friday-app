@@ -13,30 +13,22 @@ from dbmodels.company import Company
 from dbmodels.product import Product
 from dbmodels.price import Price
 
-# https://altex.ro/laptopuri/cpl/
 
-def findAltexSubPages(page_url):
-    sub_page_url_list = []
-    altex_test_page = urlopen(page_url)
-    altex_test_soup = bs(altex_test_page, 'html.parser')
+def find_altex_sub_pages(page_url):
 
-    main_container = altex_test_soup.find('div', {'class': 'lg-u-float-right lg-u-size-8of10'})
+    altex_soup = bs(urlopen(page_url), 'html.parser')
+    main_container = altex_soup.find('div', {'class': 'lg-u-float-right lg-u-size-8of10'})
     sort_container = main_container.find('div', {'class': 'u-container-reset u-border-t-solid'})
     select_page_container = sort_container.find('div', {'class': 'u-display-iblock Toolbar-pager'})
     pages_url = select_page_container.findAll('option')
 
-    for elem in pages_url:
-        sub_page_url_list.append(elem['value'])
-    return sub_page_url_list
+    return [page['value'] for page in pages_url]
 
 
 def extractAltexData(page_url):
     products_count = 0
     test_list = []
-    # type_insert = ProductType()
-    # company_insert = Company()
-    # product_insert = Product()
-    for page in findAltexSubPages(page_url):
+    for page in find_altex_sub_pages(page_url):
         altex_samsung_page = urlopen(page)
         altex_samsung_soup = bs(altex_samsung_page, 'html.parser')
         product_list = altex_samsung_soup.findAll("div", {"class": "Product-list-right"})
