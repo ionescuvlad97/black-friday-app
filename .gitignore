@@ -4,3 +4,6 @@ __pycache__/
 
 # MySQL
 my-datavolume
+
+# Testing files
+scraper/scripts/testing.py
