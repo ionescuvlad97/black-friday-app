@@ -15,23 +15,38 @@ from dbmodels.price import Price
 
 
 def find_altex_sub_pages(page_url):
+    """Find all the sub pages of a section from altex.ro
 
-    altex_soup = bs(urlopen(page_url), 'html.parser')
-    main_container = altex_soup.find('div', {'class': 'lg-u-float-right lg-u-size-8of10'})
-    sort_container = main_container.find('div', {'class': 'u-container-reset u-border-t-solid'})
-    select_page_container = sort_container.find('div', {'class': 'u-display-iblock Toolbar-pager'})
-    pages_url = select_page_container.findAll('option')
+    Because this site has a maximum limit of products that can be
+    displayed (48 products per page), in one category may be multiple
+    pages. This function returns URLs for all this pages.
 
-    return [page['value'] for page in pages_url]
+    Args:
+        param1 (str): The url of the main category
+
+    Returns:
+        list: A list that contains the URLs of the subpages
+    """
+
+    # The path to the container which contains the subpages URLs
+    path = [
+        ('div', {'class': 'lg-u-float-right lg-u-size-8of10'}),
+        ('div', {'class': 'u-container-reset u-border-t-solid'}),
+        ('div', {'class': 'u-display-iblock Toolbar-pager'})
+    ]
+
+    soup = bs(urlopen(page_url), 'html.parser')
+    for div in path:
+        soup = soup.find(*div)
+
+    return [page['value'] for page in soup.findAll('option')]
 
 
 def extractAltexData(page_url):
-    products_count = 0
-    test_list = []
+
     for page in find_altex_sub_pages(page_url):
-        altex_samsung_page = urlopen(page)
-        altex_samsung_soup = bs(altex_samsung_page, 'html.parser')
-        product_list = altex_samsung_soup.findAll("div", {"class": "Product-list-right"})
+        soup = bs(urlopen(page), 'html.parser')
+        product_list = soup.findAll("div", {"class": "Product-list-right"})
 
         for product in product_list:
             # Name Zone
@@ -70,7 +85,9 @@ def extractAltexData(page_url):
             old_price_container = price_container.find('div', {'class': 'Price-old'})
             old_price = 0
             if old_price_container is not None:
-                old_price = float(''.join(old_price_container.get_text().split('.')).replace(',', '.'))
+                old_price = float(''.join(old_price_container.get_text()  \
+                                                             .split('.')) \
+                                    .replace(',', '.'))
 
             print(f'Product type: {product_type}')
             print(f'Product company: {product_comp}')
@@ -82,9 +99,6 @@ def extractAltexData(page_url):
             print(f'Discount: {0 if old_price == 0 else old_price - current_price}')
             print(f'Discount: {0 if old_price == 0 else (old_price - current_price)*100/old_price} %')
             print()
-            products_count += 1
-            test_list.append(product_type)
-
 
             session = Session()
 
@@ -112,8 +126,6 @@ def extractAltexData(page_url):
             session.commit()
 
             session.close()
-    # print(test_list)
-    print(f'Number of products: {products_count}')
 
 
 def getURLs():
