@@ -159,16 +159,8 @@ def altex_etl_data(page_url):
             session.close()
 
 
-def getURLs():
-    fh = open("./scripts/altex_urls.txt", "r")
-    url_lst = []
-    for line in fh:
-        url_lst.append(line.strip())
-    return url_lst
-
-
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
-    url_lst = getURLs()
+    url_lst = [line.strip() for line in open("./scripts/altex_urls.txt", "r")]
     for url in url_lst:
         altex_etl_data(url)
