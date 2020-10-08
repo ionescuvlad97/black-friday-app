@@ -27,11 +27,28 @@ services:
 
   bf_api:
     build: ./api
+    expose:
+      - 5000
     ports:
-      - 5000:5000
+      - "5000:5000"
     volumes:
       - ./api:/usr/src/app
       - ./dbmodels:/usr/src/app/dbmodels
+    depends_on:
+      - mysql_db
+    networks:
+      - app-tier
+    command:
+      tail -f /dev/null
+
+  web_app:
+    build: ./web_app
+    expose:
+      - 5001
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./web_app:/usr/src/app
     depends_on:
       - mysql_db
     networks:
