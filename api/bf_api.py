@@ -1,5 +1,9 @@
 # Standard library imports
 from collections import OrderedDict
+import requests
+# from urllib import request
+import json
+from collections import Counter, OrderedDict, defaultdict
 
 # Third party imports
 from flask import Flask
@@ -10,6 +14,7 @@ from flask_restful import Api
 from flask_restful import Resource
 import markdown
 from sqlalchemy import inspect
+from pandas import DataFrame
 
 # Local application imports
 from dbmodels.base import engine
@@ -30,17 +35,18 @@ app.config["JSON_SORT_KEYS"] = False
 # Api configurations
 api = Api(app)
 
-# Home page
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 # API description page
 @app.route('/api')
 def info_api():
     with open('./README.md', 'r') as markdown_file:
         content = markdown_file.read()
         return markdown.markdown(content)
+
+
+def query_to_dict(query):
+    return [{key: value for key, value in zip(elements.keys(), elements)}
+                        for elements in query]
+
 
 def select_all_query_to_json(obj):
     session = Session()
@@ -49,6 +55,7 @@ def select_all_query_to_json(obj):
     session.close()
     return jsonify(result)
 
+
 def select_query_to_json(obj, *args):
     session = Session()
 
@@ -56,7 +63,6 @@ def select_query_to_json(obj, *args):
                 for column_name, column_value in zip(args, response)}
                 for response in session.query(*[getattr(obj, arg)
                                                 for arg in args]).all()]
-
     session.close()
     return jsonify(result)
 
@@ -67,14 +73,12 @@ def select_product_to_json(product_name):
     q = session.query(Product.name,
                       Company.name.label('company'),
                       Product.specifications,
-                      ProductType.name.label('type')).\
-                filter(Company.id == Product.company_id).\
-                filter(ProductType.id == Product.type_id).\
-                filter(Product.name.like('{}%'.format(product_name))).all()
-    result = [{key: value for key, value in zip(elements.keys(), elements)} for elements in q]
-    # result = [OrderedDict((key, val) for key, val in zip(elements.keys(), elements)) for elements in q]
+                      ProductType.name.label('type')) \
+                .filter(Company.id == Product.company_id) \
+                .filter(ProductType.id == Product.type_id) \
+                .filter(Product.name.like('{}%'.format(product_name))).all()
     session.close()
-    return jsonify(result)
+    return jsonify(query_to_dict(q))
 
 def select_product_prices_to_json(product_name):
     session = Session()
@@ -85,13 +89,12 @@ def select_product_prices_to_json(product_name):
                       Product.specifications,
                       Price.current_price,
                       Price.old_price,
-                      Price.date).\
-                filter(Price.product_id == Product.id).\
-                filter(Company.id == Product.company_id).\
-                filter(Product.name.like('{}%'.format(product_name))).all()
-    result = [{key: value for key, value in zip(elements.keys(), elements)} for elements in q]
+                      Price.date) \
+                .filter(Price.product_id == Product.id) \
+                .filter(Company.id == Product.company_id) \
+                .filter(Product.name.like('{}%'.format(product_name))).all()
     session.close()
-    return jsonify(result)
+    return jsonify(query_to_dict(q))
 
 def select_product_by_id(product_id):
     session = Session()
@@ -103,9 +106,8 @@ def select_product_by_id(product_id):
                 filter(Company.id == Product.company_id).\
                 filter(ProductType.id == Product.type_id).\
                 filter(Product.id == product_id).all()
-    result = [{key: value for key, value in zip(elements.keys(), elements)} for elements in q]
     session.close()
-    return jsonify(result)
+    return jsonify(query_to_dict(q))
 
 def select_product_prices_by_id(product_id):
     session = Session()
@@ -118,9 +120,8 @@ def select_product_prices_by_id(product_id):
                 filter(Price.product_id == Product.id).\
                 filter(Company.id == Product.company_id).\
                 filter(Product.id == product_id).all()
-    result = [{key: value for key, value in zip(elements.keys(), elements)} for elements in q]
     session.close()
-    return jsonify(result)
+    return jsonify(query_to_dict(q))
 
 # Detailed Resources Lists
 
@@ -182,4 +183,4 @@ api.add_resource(SpecificProductById, '/api/detailed/products/<int:product_id>')
 api.add_resource(SpecificProductPricesByID, '/api/detailed/prices/<int:product_id>')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port='5000')
