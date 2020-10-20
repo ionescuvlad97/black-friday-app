@@ -2,6 +2,7 @@
 from urllib.request import urlopen
 from urllib import robotparser
 import re
+
 # Third party imports
 from bs4 import BeautifulSoup as bs
 
@@ -34,7 +35,6 @@ def find_altex_sub_pages(page_url):
 
     Args:
         param1 (str): The url of the main category
-
     Returns:
         list: A list that contains the URLs of the subpages
     """
@@ -50,7 +50,8 @@ def find_altex_sub_pages(page_url):
     for div in path:
         soup = soup.find(*div)
 
-    return [page['value'] for page in soup.findAll('option')]
+    return [page['value'] for page in soup.findAll('option')
+                          if check_permissions(page['value'])]
 
 
 def altex_etl_data(page_url):
@@ -63,7 +64,6 @@ def altex_etl_data(page_url):
 
     Args:
         param1 (str): The url of the category
-
     Returns:
         None
     """
@@ -161,7 +161,16 @@ def altex_etl_data(page_url):
 
 
 def check_permissions(url):
+    """ Checks permission to extract data from URL
 
+    This function checks if the scraper has permission to
+    automatically extract data from the specified URL.
+
+    Args:
+        param1 (str): The targeted URL
+    Returns:
+        bool: The return value. True if has permission, False otherwise.
+    """
     # the regex for finding the base URL like http://www.example.com from
     # http://www.example.com/eggs/foo/bar?arg1=smth
     path = r'^.+?[^\/:](?=[?\/]|$)'

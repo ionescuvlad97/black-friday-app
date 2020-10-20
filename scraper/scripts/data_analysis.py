@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 
 # Local application imports
 from dbmodels.base import engine
-from dbmodels.base Base
-from dbmodels.base Session
+from dbmodels.base import Base
+from dbmodels.base import Session
 from dbmodels.product import Product
 from dbmodels.price import Price
 
