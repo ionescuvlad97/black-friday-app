@@ -1,6 +1,7 @@
 # Standard library imports
 from urllib.request import urlopen
-
+from urllib import robotparser
+import re
 # Third party imports
 from bs4 import BeautifulSoup as bs
 
@@ -158,6 +159,18 @@ def altex_etl_data(page_url):
 
             session.close()
 
+
+def check_permissions(url):
+
+    # the regex for finding the base URL like http://www.example.com from
+    # http://www.example.com/eggs/foo/bar?arg1=smth
+    path = r'^.+?[^\/:](?=[?\/]|$)'
+    base_url = re.findall(path, url)[0]
+
+    rp = robotparser.RobotFileParser()
+    rp.set_url(base_url + '/robots.txt')
+    rp.read()
+    return rp.can_fetch('*', url)
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
