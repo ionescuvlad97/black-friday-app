@@ -1,13 +1,14 @@
 # Documentation for Black Friday Scraper API
 
+The API runs on port 5000 of localhost
 All responses will be in `JSON` fromat
 
 ## Available information
 
-- Product Company
-- Product Type
-- Product
-- Product Price Info
+- Companies
+- Products Types
+- Products
+- Products Prices
 
 ## Debugging fields
 
