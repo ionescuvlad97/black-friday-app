@@ -52,10 +52,7 @@ docker-compose exec bf_api python ./bf_api.py
 ```json
 [
   {
-    "name": "iPhone Xs Max"
-  },
-  {
-    "name": "iPhone 11 Pro Max"
+    "name": "Telefon"
   }
 ]
 ```
