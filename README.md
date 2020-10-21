@@ -5,12 +5,11 @@ Non-official application that determines whether the prices of discounted Black 
 - [Getting Started](#getting_started)
 - [Usage](#usage)
 - [Scraper](/scraper/README.md)
+- [Database](/dbmodels/README.md)
 - [API](/api/README.md)
 - [Web App](/web_app/README.md)
 - [Built Using](#built_using)
 - [TODO](../TODO.md)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
 
 ## About <a name = "about"></a>
 This app allows you to search for products on [Altex](https://www.altex.ro/) and extract some useful information (price, discounted price). For the moment, the app allows you to scrape multiple pages, which means that you will get multiple products. Using the API or the Web App, you can search for a specific product. \
@@ -36,8 +35,15 @@ docker-compose build
 ```
 
 ## Usage <a name="usage"></a>
-Add notes about how to use the system.
 
+### Architecture
+
+The application consists of four microservices:
+- Scraper
+- Database
+- REST API
+- Web App
+### 
 ## Built Using <a name = "built_using"></a>
 - [SQLAlchemy](https://www.sqlalchemy.org/)/[MySQL](https://www.mysql.com/)- Database
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) - Web Framework
