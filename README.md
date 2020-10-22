@@ -1,6 +1,6 @@
 
 ## Black Friday App
-Non-official application that determines whether the prices of discounted Black Friday products on Altex are really lower than usual.
+Non-official application that determines whether the prices of discounted Black Friday products on Altex are really lower than usual. Disclaimer: Developed for educational purposes only.
 ## Table of Contents
 - [About](#about)
 - [Getting Started](#getting_started)
