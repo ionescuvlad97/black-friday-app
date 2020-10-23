@@ -1,7 +1,14 @@
 
-## Black Friday App
-Non-official application that determines whether the prices of discounted Black Friday products on Altex are really lower than usual. Disclaimer: Developed for educational purposes only.
+# Black Friday App
+
+Non-official application that determines whether the prices of discounted Black Friday products on Altex are really lower than usual.
+
+## Disclaimer
+
+This project is developed for _**Educational Purposes**_  **ONLY**. The scraper has  the function `check_permissions()` which parse the `robots.txt` (many websites specifies what is considered as good behaviour on that site, such as areas that are allowed to be crawled, restricted pages, and frequency limits for crawling). This function will automatically decide if you can extract data from those URLs and must be always used.
+
 ## Table of Contents
+
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
@@ -14,7 +21,7 @@ Non-official application that determines whether the prices of discounted Black 
 ## About <a name = "about"></a>
 This app allows you to search for products on [Altex](https://www.altex.ro/) and extract some useful information (price, discounted price). For the moment, the app allows you to scrape multiple pages, which means that you will get multiple products. Using the API or the Web App, you can search for a specific product. \
 \
-On the Web App you can find some statistics about the companies, and visualize for each product, the evolution in time of the price. 
+On the Web App you can find some statistics about the companies, and for each product, visualize the evolution in time of the price.
 
 ## Getting Started <a name = "getting_started"></a>
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
