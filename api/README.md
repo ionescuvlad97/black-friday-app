@@ -1,4 +1,3 @@
-
 # Black Friday Scraper API
 
 The Web App will use this API to retrive data from the Database. \
@@ -11,10 +10,22 @@ Run in main directory:
 ```
 docker-compose up -d
 ```
-After all the services are started and up to date, run:
+After all the services are started and up to date, start another console window (beacause you have to keep the API server running) and run:
 ```
 docker-compose exec bf_api python ./bf_api.py
 ````
+If everythning is ok, you should see this in your console:
+```
+ * Serving Flask app "bf_api" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 158-165-835
+ ```
 
 ## Usage
 `http://localhost:5000/api` - Will show this documentation in browser
